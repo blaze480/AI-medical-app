@@ -1,0 +1,11 @@
+﻿venv/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+node_modules/
+dataset/
+.env
+.env.*
+app/static/uploads/*
+app/static/results/*

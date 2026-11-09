@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Medical Diagnosis</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #eef7ff, #f7fbff);
+            color: #172033;
+        }
+
+        .header {
+            background: #ffffff;
+            border-bottom: 1px solid #e5eaf0;
+            padding: 20px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1565c0;
+        }
+
+        .badge {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1050px;
+            margin: 60px auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 44px;
+            margin-bottom: 15px;
+            color: #102a43;
+        }
+
+        .hero h1 span {
+            color: #1976d2;
+        }
+
+        .hero p {
+            font-size: 17px;
+            color: #627d98;
+            max-width: 650px;
+            margin: auto;
+            line-height: 1.6;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 45px rgba(20, 60, 100, 0.10);
+            border: 1px solid #e6edf5;
+            max-width: 720px;
+            margin: auto;
+        }
+
+        .upload-area {
+            border: 2px dashed #90caf9;
+            border-radius: 16px;
+            padding: 45px 25px;
+            text-align: center;
+            background: #f8fcff;
+            transition: 0.2s;
+        }
+
+        .upload-area:hover {
+            border-color: #1976d2;
+            background: #f1f8ff;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .upload-area h2 {
+            color: #243b53;
+            margin-bottom: 10px;
+        }
+
+        .upload-area p {
+            color: #829ab1;
+            margin-bottom: 25px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-label {
+            display: inline-block;
+            padding: 13px 24px;
+            background: #1976d2;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .file-label:hover {
+            background: #125aa0;
+        }
+
+        #file-name {
+            margin-top: 15px;
+            color: #486581;
+            font-size: 14px;
+        }
+
+        .predict-btn {
+            width: 100%;
+            margin-top: 25px;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            background: #0d47a1;
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .predict-btn:hover {
+            background: #083b88;
+        }
+
+        .predict-btn:disabled {
+            background: #9fb3c8;
+            cursor: not-allowed;
+        }
+
+        .info-section {
+            margin-top: 35px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .info-box {
+            background: white;
+            border-radius: 14px;
+            padding: 22px;
+            border: 1px solid #e6edf5;
+        }
+
+        .info-box h3 {
+            color: #1565c0;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .info-box p {
+            color: #627d98;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .warning {
+            max-width: 720px;
+            margin: 25px auto 0;
+            text-align: center;
+            font-size: 13px;
+            color: #7b8794;
+            line-height: 1.5;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 45px;
+            padding: 25px;
+            color: #829ab1;
+            font-size: 13px;
+        }
+
+        @media (max-width: 700px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .card {
+                padding: 25px;
+            }
+
+            .info-section {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 18px 5%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="logo">🩺 AI Medical Diagnosis</div>
+        <div class="badge">AI Powered</div>
+    </header>
+
+    <main class="container">
+
+        <section class="hero">
+            <h1>Chest X-Ray <span>Analysis</span></h1>
+
+            <p>
+                Upload a chest X-ray image and our AI model will analyze
+                it for features associated with pneumonia.
+            </p>
+        </section>
+
+        <form action="/predict" method="POST" enctype="multipart/form-data">
+
+            <div class="card">
+
+                <div class="upload-area">
+
+                    <div class="upload-icon">🩻</div>
+
+                    <h2>Upload Chest X-Ray</h2>
+
+                    <p>
+                        Supported formats: JPG, JPEG, PNG, BMP, WEBP
+                    </p>
+
+                    <label for="file" class="file-label">
+                        Choose X-Ray Image
+                    </label>
+
+                    <input
+                        type="file"
+                        id="file"
+                        name="file"
+                        accept=".jpg,.jpeg,.png,.bmp,.webp"
+                        required
+                    >
+
+                    <div id="file-name">
+                        No image selected
+                    </div>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="predict-btn"
+                    id="predict-btn"
+                >
+                    🔍 Analyze X-Ray
+                </button>
+
+            </div>
+
+        </form>
+
+        <section class="info-section">
+
+            <div class="info-box">
+                <h3>🤖 AI Analysis</h3>
+                <p>
+                    The trained CNN model analyzes the uploaded
+                    chest X-ray image.
+                </p>
+            </div>
+
+            <div class="info-box">
+                <h3>📊 Confidence</h3>
+                <p>
+                    The result includes the model's prediction
+                    confidence.
+                </p>
+            </div>
+
+            <div class="info-box">
+                <h3>🔥 Grad-CAM</h3>
+                <p>
+                    Visual heatmaps can highlight image regions
+                    used by the model.
+                </p>
+            </div>
+
+        </section>
+
+        <div class="warning">
+            ⚠️ This application is for educational and research
+            purposes only. AI predictions are not a medical diagnosis.
+            Please consult a qualified healthcare professional.
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        AI Medical Diagnosis • Chest X-Ray Analysis
+    </footer>
+
+
+    <script>
+
+        const fileInput = document.getElementById("file");
+        const fileName = document.getElementById("file-name");
+        const predictButton = document.getElementById("predict-btn");
+
+        fileInput.addEventListener("change", function () {
+
+            if (this.files.length > 0) {
+
+                fileName.textContent =
+                    "Selected: " + this.files[0].name;
+
+            } else {
+
+                fileName.textContent =
+                    "No image selected";
+
+            }
+
+        });
+
+        document.querySelector("form").addEventListener("submit", function () {
+
+            predictButton.disabled = true;
+            predictButton.textContent = "⏳ Analyzing X-Ray...";
+
+        });
+
+    </script>
+
+</body>
+</html>

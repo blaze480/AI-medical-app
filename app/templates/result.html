@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Medical Diagnosis - Result</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #eef7ff, #f7fbff);
+            color: #172033;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e5eaf0;
+            padding: 20px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1565c0;
+        }
+
+        .badge {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 45px auto;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .title h1 {
+            font-size: 38px;
+            color: #102a43;
+            margin-bottom: 10px;
+        }
+
+        .title p {
+            color: #627d98;
+            font-size: 16px;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 15px 45px rgba(20, 60, 100, 0.10);
+            border: 1px solid #e6edf5;
+        }
+
+        .prediction {
+            text-align: center;
+            padding: 25px;
+            border-radius: 15px;
+            background: #f8fbff;
+            margin-bottom: 30px;
+        }
+
+        .prediction-label {
+            font-size: 14px;
+            color: #829ab1;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .prediction h2 {
+            font-size: 38px;
+            margin-bottom: 15px;
+        }
+
+        .normal {
+            color: #2e7d32;
+        }
+
+        .pneumonia {
+            color: #c62828;
+        }
+
+        .confidence {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-weight: 700;
+        }
+
+        .images {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .image-card {
+            background: #f8fbff;
+            border: 1px solid #e1e8ef;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .image-card h3 {
+            color: #243b53;
+            margin-bottom: 15px;
+        }
+
+        .image-card img {
+            width: 100%;
+            max-height: 450px;
+            object-fit: contain;
+            border-radius: 10px;
+            background: white;
+            border: 1px solid #d9e2ec;
+        }
+
+        .information {
+            margin-top: 30px;
+        }
+
+        .information h2 {
+            color: #1565c0;
+            margin-bottom: 18px;
+        }
+
+        .info-box {
+            background: #f8fbff;
+            border-left: 4px solid #1976d2;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .info-box h3 {
+            color: #243b53;
+            margin-bottom: 8px;
+        }
+
+        .info-box p {
+            color: #627d98;
+            line-height: 1.6;
+        }
+
+        .warning {
+            background: #fff8e1;
+            border: 1px solid #ffe082;
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 25px;
+            color: #6d4c00;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .back-button {
+            display: block;
+            width: fit-content;
+            margin: 30px auto 0;
+            padding: 14px 25px;
+            background: #1565c0;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .back-button:hover {
+            background: #0d47a1;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 25px;
+            color: #829ab1;
+            font-size: 13px;
+        }
+
+        @media (max-width: 750px) {
+            .images {
+                grid-template-columns: 1fr;
+            }
+
+            .title h1 {
+                font-size: 30px;
+            }
+
+            .result-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="logo">
+        🩺 AI Medical Diagnosis
+    </div>
+
+    <div class="badge">
+        AI Powered
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <section class="title">
+
+        <h1>Analysis Result</h1>
+
+        <p>
+            Chest X-ray analysis completed successfully.
+        </p>
+
+    </section>
+
+
+    <section class="result-card">
+
+
+        <!-- PREDICTION -->
+
+        <div class="prediction">
+
+            <div class="prediction-label">
+                AI Prediction
+            </div>
+
+
+            {% if result == "NORMAL" %}
+
+                <h2 class="normal">
+                    ✓ NORMAL
+                </h2>
+
+            {% elif result == "PNEUMONIA" %}
+
+                <h2 class="pneumonia">
+                    ⚠ PNEUMONIA
+                </h2>
+
+            {% else %}
+
+                <h2>
+                    {{ result }}
+                </h2>
+
+            {% endif %}
+
+
+            <div class="confidence">
+                Confidence: {{ confidence }}%
+            </div>
+
+        </div>
+
+
+        <!-- IMAGES -->
+
+        <div class="images">
+
+            <div class="image-card">
+
+                <h3>
+                    🩻 Uploaded X-Ray
+                </h3>
+
+                <img
+                    src="{{ uploaded_image }}"
+                    alt="Uploaded Chest X-Ray"
+                >
+
+            </div>
+
+
+            <div class="image-card">
+
+                <h3>
+                    🔥 Grad-CAM Analysis
+                </h3>
+
+                {% if cam_image %}
+
+                    <img
+                        src="{{ cam_image }}"
+                        alt="Grad-CAM Result"
+                    >
+
+                {% else %}
+
+                    <p>
+                        Grad-CAM image was not generated.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- MEDICAL INFORMATION -->
+
+        <div class="information">
+
+            <h2>
+                Medical Information
+            </h2>
+
+
+            <div class="info-box">
+
+                <h3>
+                    {{ information.title }}
+                </h3>
+
+                <p>
+                    {{ information.description }}
+                </p>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <h3>
+                    Possible Causes
+                </h3>
+
+                <p>
+                    {{ information.causes }}
+                </p>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <h3>
+                    Guidance
+                </h3>
+
+                <p>
+                    {{ information.guidance }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- DISCLAIMER -->
+
+        <div class="warning">
+
+            ⚠️ <strong>Important:</strong>
+
+            This AI prediction is intended for educational
+            and research purposes only. It is not a medical
+            diagnosis and should not replace evaluation by
+            a qualified healthcare professional.
+
+        </div>
+
+
+    </section>
+
+
+    <a href="/" class="back-button">
+        ← Analyze Another X-Ray
+    </a>
+
+</main>
+
+
+<footer class="footer">
+
+    AI Medical Diagnosis • Chest X-Ray Analysis
+
+</footer>
+
+</body>
+
+</html>
