@@ -5,6 +5,11 @@ from PIL import Image
 import numpy as np
 import cv2
 
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent
+MODEL_PATH = PROJECT_ROOT / "model" / "medical_cnn.pth"
+
 
 # =====================================================
 # MODEL
@@ -85,7 +90,7 @@ model = MedicalCNN().to(device)
 
 model.load_state_dict(
     torch.load(
-        "model/medical_cnn.pth",
+        MODEL_PATH,
         map_location=device
     )
 )
