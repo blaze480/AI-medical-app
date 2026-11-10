@@ -1,4 +1,5 @@
-﻿import sys
+﻿import os
+import sys
 from pathlib import Path
 import uuid
 
@@ -24,7 +25,10 @@ from werkzeug.utils import secure_filename
 # AI PREDICTOR
 # ==========================================
 
-from predictor_backup import predict_image
+if os.environ.get("USE_ONNX") == "1":
+    from predictor_onnx import predict_image
+else:
+    from predictor_backup import predict_image
 
 
 # ==========================================
@@ -244,10 +248,13 @@ def predict():
         unique_name
     )
 
-    cam_image = (
-        "/static/results/" +
-        result_filename
-    )
+    if os.environ.get("USE_ONNX") == "1":
+        cam_image = None
+    else:
+        cam_image = (
+            "/static/results/" +
+            result_filename
+        )
 
     # ======================================
     # CONFIDENCE
